@@ -1,0 +1,15 @@
+name: keepalive
+on:
+  schedule:
+    - cron: "17 6 */3 * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ping Supabase (tine proiectul activ)
+        run: |
+          URL=$(grep -oP 'url:\s*"\K[^"]+' config.js)
+          KEY=$(grep -oP 'key:\s*"\K[^"]+' config.js)
+          curl -sf -X POST "$URL/rest/v1/rpc/ping" -H "apikey: $KEY" -H "Content-Type: application/json" -d '{}'
